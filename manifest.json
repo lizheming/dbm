@@ -1,0 +1,15 @@
+{
+"update_url": "https://clients2.google.com/service/update2/crx",
+
+    "name" : "豆瓣电影统计", 
+    "version" : "1.0",
+    "manifest_version" : 2, 
+
+    "content_scripts" : [
+        {
+            "matches" : ["http://movie.douban.com/people/*/collect"], 
+            "js"      : ["json2.js","jquery-2.0.3.min.js", "script.js","date.js","highcharts.js"], 
+            "run_at"  : "document_end"
+        }
+    ]
+}
