@@ -7,7 +7,7 @@
 
     "content_scripts" : [
         {
-            "matches" : ["http://movie.douban.com/people/*/collect"], 
+            "matches" : ["http://movie.douban.com/people/*/collect", "http://movie.douban.com/mine?status=collect"], 
             "js"      : ["json2.js","jquery-2.0.3.min.js", "script.js","date.js","highcharts.js"], 
             "run_at"  : "document_end"
         }
