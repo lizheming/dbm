@@ -91,6 +91,8 @@ $('#wrapper').on('change', '#year', function(e) {
 	m = new Array();
 	w = 'http://movie.douban.com/people/'+u+'/collect?sort=time&rating=all&filter=all&mode=grid&start=';
 
+	t = Math.ceil(n/15);
+	$('.grid-view').prepend('<p>本次统计需要加载数据共'+t+'页，请耐心等待加载完毕！</p>');
 	(function collect(i) {
 	page = i/15 + 1;
 	$('.grid-view').prepend('<p>正在准备加载第'+page+'页...</p>');
@@ -114,7 +116,6 @@ $('#wrapper').on('change', '#year', function(e) {
 					var _des = $('.opt-ln', item).prev();
 					if($('.date', _des).length == 0) var des = _des.html();
 					else var des = '';
-					console.log([id, title, img, date, rate, des]);
 					m.push([id, title, img, date, rate, des]);
 				}
 			});	
@@ -155,7 +156,7 @@ $('#wrapper').on('change', '#year', function(e) {
 			    });
 
         		var maw = mwatch(MONTH), word =  y+'年我一共看了'+TOTAL+'部片儿，平均每月看片'+Math.round(TOTAL/12 * 10) / 10+'部，其中'+CATEGORIES[maw]+'看了'+MONTH[maw]+'部片儿，是我的年度最佳看片月。十二个月'+av(TOTAL, MONTH)+'，'+arate(RATE)+'#豆瓣电影统计工具#';
-				$('.grid-view').html('<div id="column"></div><div id="column_2"></div><div id="pie"></div><div id="mc"></div><div id="command"></div><ul id="msh">'+LI+'</ul><div id="raw"><p style="background-color:#d9edf7;color:#3a87ad;padding:8px 35px 8px 14px;margin-bottom:18px;text-shadow: 0 1px 0 rgba(255,255,255,0.5);border:1px solid #bce8f1;-webkit-border-radius:4px;font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;font-size:13px;">'+word+'<a class="jiathis_button_douban" href="http://shuo.douban.com/!service/share?image=&href='+w+'&name='+$('title').html()+'&text='+word+'" target="_blank" style="float:right;">分享到豆瓣</a></p><p style="margin-top:50px;"><label>引用代码：</label></p><textarea style="height:600px;resize:vertical;width:100%;">'+LI+'</textarea></div>');
+				$('.grid-view').html('<div id="column"></div><div id="column_2"></div><div id="pie"></div><div id="mc"></div><div id="command"></div><ul id="msh">'+LI+'</ul><div id="raw"><p style="background-color:#d9edf7;color:#3a87ad;padding:8px 35px 8px 14px;margin-bottom:18px;text-shadow: 0 1px 0 rgba(255,255,255,0.5);border:1px solid #bce8f1;-webkit-border-radius:4px;font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;font-size:13px;">'+word+'<a class="jiathis_button_douban" href="http://shuo.douban.com/!service/share?image=&href='+w+'&name='+$('title').html()+'&text='+word+'" target="_blank" style="float:right;">分享到豆瓣</a></p><p style="margin-top:50px;"><label>引用代码（<a href="javascript:void(0);" class="export_raw">导出到文件</a>）：</label></p><textarea style="height:600px;resize:vertical;width:100%;">'+LI+'</textarea></div>');
 				$('#command').html('<span class="1">一星</span><span class="2">二星</span><span class="3">三星</span><span class="4">四星</span><span class="5">五星</span><span class="0">所有</span>');
 		        $('#command').css({
 	                'border-bottom': '1px solid #06F',
@@ -208,6 +209,7 @@ $('#wrapper').on('change', '#year', function(e) {
 		            if(i==0||i==2||i==4||i==6||i==7||i==9||i==11){var _M=m31;}else{var _M=m30;}
 		            res.push({y: MONTH[i],color: colors[0],drilldown: {name: CATEGORIES[i],categories: _M,data: DAY[i],color: colors[0]}});
 		        }
+
 		        function setChart(name, categories, data, color) {
 		            chart.xAxis[0].setCategories(categories, false);
 		            chart.series[0].remove(false);
@@ -318,6 +320,139 @@ $('#wrapper').on('change', '#year', function(e) {
                         data: [['无', RATE[0]], ['1星', RATE[1]], ['2星', RATE[2]], ['3星', RATE[3]], ['4星', RATE[4]], ['5星', RATE[5]]]
                 	}]
         		});
+
+				/*输出结果*/
+				function export_raw(name, data) {
+				    var urlObject = window.webkitURL;
+
+				    var export_blob = new Blob([data]);
+
+				    var save_link = document.createElementNS("http://www.w3.org/1999/xhtml", "a")
+				    save_link.href = urlObject.createObjectURL(export_blob);
+				    save_link.download = name;
+				    var ev = document.createEvent("MouseEvents");
+				    ev.initMouseEvent(
+				        "click", true, false, window, 0, 0, 0, 0, 0
+				        , false, false, false, false, 0, null
+				        );
+				    save_link.dispatchEvent(ev);
+				}
+				EX = "<!DOCTYPE html><html><head><meta charset=\"utf-8\" /><title>"+u+" "+y+"年观影统计</title>";
+				EX += "<style type=\"text/css\">html,body{margin:0;padding:0;}body{width:800px;margin:0 auto;}#msh {width:100%;margin:0;padding:0} #msh li{display:inline-table;margin:3px;}#command {border-bottom:1px solid #06F;margin:10px 0;padding:10px 0 6px 0;font-size: 16px;text-shadow:1px 1px 1px #FFF;}#command span{padding:10px 20px 7px 20px;cursor:pointer;}#command span:hover{border:1px solid #06F;background:#FFF;border-bottom:1px solid #FFF}#command span.click{border:1px solid #06F;background:#FFF;border-bottom:1px solid #FFF}</style>";
+				EX += "</head><body>";
+				EX += "<div id=\"column\"></div><div id=\"pie\"></div>";
+				EX += "<div id=\"command\"><span class=\"1\">一星</span><span class=\"2\">二星</span><span class=\"3\">三星</span><span class=\"4\">四星</span><span class=\"5\">五星</span><span class=\"0\">所有</span></div>";
+				EX += "<ul id=\"msh\">"+LI+"</ul>";
+				EX += "<script type=\"text/javascript\" src=\"http://lib.sinaapp.com/js/jquery/2.0.3/jquery-2.0.3.min.js\"></script>";
+				EX += "<script type=\"text/javascript\" src=\"http://lib.sinaapp.com/js/highcharts/2.3.5/highcharts.js\"></script>";
+				EX += "<script>";
+				EX += setChart.toString();
+				EX += "chart = new Highcharts.Chart({"+
+						"    chart: {"+
+						"        renderTo: 'column',"+
+						"        type: 'column'"+
+						"    },"+
+						"    title: {"+
+						"        text: '"+y+"年你一共看过"+TOTAL+"部电影'"+
+						"    },"+
+						"    xAxis: {"+
+						"        categories: "+JSON.stringify(CATEGORIES)+
+						"    },"+
+						"    yAxis: {"+
+						"        title: {text: '数量（部）'}"+
+						"    },"+
+						"    plotOptions: {"+
+						"        column: {"+
+						"            cursor: 'pointer',"+
+						"            point: {"+
+						"                events: {"+
+						"                    click: function() {"+
+						"                        var drilldown = this.drilldown;"+
+						"                        if (drilldown) {"+
+						"                            setChart(drilldown.name, drilldown.categories, drilldown.data, drilldown.color)"+
+						"                        } else {"+
+						"                            setChart(name, categories, res, colors[0])"+
+						"                        }"+
+						"                    }"+
+						"                }"+
+						"            },"+
+						"            dataLabels: {"+
+						"                enabled: true,"+
+						"                formatter: function() {"+
+						"                    return this.y"+
+						"                }"+
+						"            }"+
+						"        }"+
+						"    },"+
+						"    tooltip: {"+
+						"        formatter: function() {"+
+						"            var point = this.point,"+
+						"            s = this.x + ': ' + this.y + '部<br/>';"+
+						"            s += point.drilldown ? '单击查看' + point.category + '详情' : '返回月份总览';"+
+						"            return s;"+
+						"        }"+
+						"    },"+
+						"    series: [{"+
+						"        name: '"+name+"',"+
+						"        data: "+JSON.stringify(res)+","+
+						"        color: '"+colors[0]+"'"+
+						"    }],"+
+						"    exporting: {"+
+						"        enabled: true"+
+						"    }"+
+						"});";
+				EX += "chart2 = new Highcharts.Chart({"+
+						"	chart: {"+
+						"        renderTo: 'pie',"+
+						"        plotBackgroundColor: null,"+
+						"        plotBorderWidth: null,"+
+						"        plotShadow: false"+
+						"	},"+
+						"	title: {"+
+						"        text: '评分分布'"+
+						"	},"+
+						"	tooltip: {"+
+						"        pointFormat: '',"+
+						"        percentageDecimals: 0"+
+						"	},"+
+						"	plotOptions: {"+
+						"        pie: {"+
+						"            allowPointSelect: true,"+
+						"            cursor: 'pointer',"+
+						"            dataLabels: {"+
+						"                enabled: true,"+
+						"        	     color: '#000000',"+
+						"                connectorColor: '#000000',"+
+						"                formatter: function() {"+
+						"                    return '<b>' + this.point.name + '</b>: ' + Math.round(this.percentage) + ' %'"+
+						"                }"+
+						"            }"+
+						"        }"+
+						"	},"+
+						"	series: [{"+
+						"        type: 'pie',"+
+						"        name: '数量',"+
+						"        data: [['无', "+RATE[0]+"], ['1星', "+RATE[1]+"], ['2星', "+RATE[2]+"], ['3星', "+RATE[3]+"], ['4星', "+RATE[4]+"], ['5星', "+RATE[5]+"]]"+
+						"	}]"+
+						"});";
+				EX += "$('body').on('click', '#command span', function(e){"+
+							"var n = parseInt($(this).attr('class'));"+
+							"$('#command .click').removeClass('click');"+
+							"if(n != 0) {"+
+								"for(i=0;i<6;i++) $('#msh .'+i).css('display', 'none');"+
+								"$('#command .'+n).addClass('click');"+
+								"$('#msh .'+n).css('display', 'inline-table');"+
+							"} else {"+
+								"$('#command .0').addClass('click');"+
+								"for(i=0;i<6;i++) $('#msh .'+i).css('display', 'inline-table');"+
+							"}"+
+						"});";
+				EX += "</script>";
+				EX += "</body></html>";
+				$(document).on('click', '.export_raw', function() {
+					export_raw(y+' year '+u+' watched.html', EX);
+				})
+				
 			}
 		}
 	});

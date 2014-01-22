@@ -2,7 +2,7 @@
 "update_url": "https://clients2.google.com/service/update2/crx",
 
     "name" : "豆瓣电影统计", 
-    "version" : "1.0",
+    "version" : "1.2",
     "manifest_version" : 2, 
 
     "content_scripts" : [
