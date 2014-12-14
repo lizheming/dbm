@@ -53,8 +53,10 @@ $('.article .sort').append(
 '<span class="gray-dot">·</span><a href="#" id="tj">电影统计</a>'
 );
 $('#wrapper').on('click', '#tj', function(e){
+    var now = new Date().getFullYear(), option = "<option> - <option>";
+    for(var year=2008; year<=now; year++) option += "<option>{{year}}</option>".replace("{{year}}", year);
 	$('.article .sort').append(
-	'<span class="gray-dot">·</span>选择统计年份：<select id="year" value=""><option> - </option><option>2014</option><option>2013</option><option>2012</option><option>2011</option><option>2010</option><option>2009</option><option>2008</option></select>'
+	'<span class="gray-dot">·</span>选择统计年份：<select id="year" value="">'+option+'</select>'
 	);
 });
 $('#wrapper').on('change', '#year', function(e) {
