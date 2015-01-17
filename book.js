@@ -19,13 +19,7 @@ optionContainer.addEventListener("change", function(e) {
     var year = +e.target.value, 
         user = document.querySelector("#db-usr-profile a").href.split("/").reverse()[1],
         total = +document.querySelector("title").textContent.match(/[0-9]+/),
-        userData, books;
-
-    if(localStorage[user]) {
-        userData = JSON.parse( localStorage[user] );
-        if( Array.isArray(userData) ) userData = {}; //to compatiable old version
-    } else userData = {};
-    books = userData.book || [];
+        books = localStorage[user] ? JSON.parse( localStorage[user] ) : [];
 
     if(books.length === total) return render(books, year);
     var pages = getPages(user, total, "book"), percent = {
@@ -51,8 +45,7 @@ optionContainer.addEventListener("change", function(e) {
     }, Promise.resolve()).then(function() {
         percent.remove();
         render(books, year);
-        userData.book = books;
-        localStorage.setItem(user, JSON.stringify(userData));
+        localStorage.setItem(user, JSON.stringify(books));
     });
 
     function getBooks(dom) {
@@ -67,7 +60,7 @@ optionContainer.addEventListener("change", function(e) {
             book = {
                 id   : book.id,
                 img  : "http://iphoto.sinaapp.com/book/{id}.jpg".replace("{id}", book.id),
-                des  : desDOM.textContent,
+                des  : desDOM.textContent || "",
                 date : book.date.join("-"),
                 year : +book.date[0],
                 rate : rateDOM ? rateDOM.className.substring(6,7) : 0,

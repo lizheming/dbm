@@ -18,13 +18,7 @@ optionContainer.addEventListener("change", function(e) {
     var year = +e.target.value, 
         user = document.querySelector("#db-usr-profile a").href.split("/").reverse()[1],
         total = +document.querySelector("title").textContent.match(/[0-9]+/),
-        userData, films;
-
-    if(localStorage[user]) {
-        userData = JSON.parse( localStorage[user] );
-        if( Array.isArray(userData) ) userData = {}; //to compatiable old version
-    } else userData = {};
-    films = userData.film || [];
+        films = localStorage[user] ? JSON.parse( localStorage[user] ) : [];
 
     if(films.length === total) return render(films, year);
     var pages = getPages(user, total), percent = {
@@ -50,15 +44,13 @@ optionContainer.addEventListener("change", function(e) {
     }, Promise.resolve()).then(function() {
         percent.remove();
         render(films, year);
-        userData.film = films;
-        console.log(userData);
-        localStorage.setItem(user, JSON.stringify(userData));
+        localStorage.setItem(user, JSON.stringify(films));
     });
     function getFilms(dom) {
         return [].forEach.call(dom.querySelectorAll(".item"), function(item) {
             var dateDOM = item.querySelector(".date"),
                 rateDOM = dateDOM.previousElementSibling,
-                desDOM  = item.querySelector(".opt-ln").previousElementSibling,
+                desDOM  = item.querySelector(".comment"),
                 film = {
                     id   : item.querySelector(".nbg").href.split("subject/")[1].split("/")[0],
                     date : dateDOM.innerHTML
@@ -66,7 +58,7 @@ optionContainer.addEventListener("change", function(e) {
             var film = {
                 id   : film.id,
                 img  : "http://iphoto.sinaapp.com/{id}.jpg".replace("{id}", film.id),
-                des  : desDOM.querySelector(".date") ? "" : desDOM.textContent,
+                des  : desDOM ? desDOM.textContent : "",
                 date : film.date,
                 year : +film.date.split("-")[0],
                 rate : rateDOM ? rateDOM.className.substring(6,7) : 0,
