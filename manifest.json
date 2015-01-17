@@ -7,9 +7,33 @@
 
     "content_scripts" : [
         {
-            "matches" : ["http://movie.douban.com/people/*/collect", "http://movie.douban.com/mine?status=collect"], 
-            "js"      : ["json2.js","jquery-2.0.3.min.js", "script.js","date.js","highcharts.js"], 
+            "matches" : [
+                "http://movie.douban.com/people/*/collect", 
+                "http://movie.douban.com/mine?status=collect",
+                "http://book.douban.com/people/*/collect", 
+                "http://book.douban.com/mine?status=collect"
+            ],
+            "js"      : [
+                "jquery-2.0.3.min.js",
+                "highcharts.js",
+                "function.js"
+            ],
             "run_at"  : "document_end"
+        },
+        {
+            "matches" : [
+                "http://movie.douban.com/people/*/collect", 
+                "http://movie.douban.com/mine?status=collect"
+            ], 
+            "js"      : ["movie.js"], 
+            "run_at"  : "document_end"
+        },
+        {
+            "matches" : [
+                "http://book.douban.com/people/*/collect", 
+                "http://book.douban.com/mine?status=collect"
+            ],
+            "js"      : ["book.js"]
         }
     ]
 }
