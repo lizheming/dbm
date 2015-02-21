@@ -1,6 +1,8 @@
-var optionContainer = document.querySelector(".article .sort"),
-    contentContainer = document.querySelector(".paginator");
-contentContainer.classList.toggle("paginator");
+var articleContainer = document.querySelector(".article"),
+    optionContainer = articleContainer.querySelector(".sort"),
+    contentContainer = document.createElement("div");
+contentContainer.classList.toggle("grid-view");
+articleContainer.appendChild( contentContainer );
 optionContainer.innerHTML += '<span class="gray-dot">·</span><a href="javascript:void(0);" id="tj">阅读统计</a>';
 optionContainer.addEventListener("click", function(e) {
     if(e.target.id === "tj") {
@@ -13,7 +15,10 @@ optionContainer.addEventListener("click", function(e) {
 })
 optionContainer.addEventListener("change", function(e) {
     if(e.target.id != "year") return true;
-    contentContainer.previousElementSibling.innerHTML = "";
+    try {
+        document.querySelector(".article>ul").innerHTML = "";
+        document.querySelector(".paginator").innerHTML = "";
+    } catch(e) {};
     contentContainer.innerHTML = "";
 
     var year = +e.target.value, 
@@ -22,12 +27,14 @@ optionContainer.addEventListener("change", function(e) {
         books = localStorage[user] ? JSON.parse( localStorage[user] ) : [];
 
     if(books.length === total) return render(books, year);
+    else books = [];
+    
     var pages = getPages(user, total, "book"), percent = {
         init: function() {
             contentContainer.innerHTML = '<div class="percent" style="font-size:100px;text-align:center;color:#000;line-height:100px;"><span>0</span>%</div>';
         },
         update: function(percent) {
-            contentContainer.querySelector(".percent span").innerHTML = (percent*100).toFixed(2);
+            contentContainer.querySelector(".percent span").innerHTML = (percent*100).toFixed(1);
         },
         remove: function() {
             contentContainer.innerHTML = "";

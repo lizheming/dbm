@@ -12,7 +12,9 @@ optionContainer.addEventListener("click", function(e) {
 })
 optionContainer.addEventListener("change", function(e) {
     if(e.target.id != "year") return true;
-    document.querySelector(".paginator").innerHTML = "";
+    try {
+        document.querySelector(".paginator").innerHTML = "";
+    } catch(e) {};
     contentContainer.innerHTML = "";
 
     var year = +e.target.value, 
@@ -21,12 +23,14 @@ optionContainer.addEventListener("change", function(e) {
         films = localStorage[user] ? JSON.parse( localStorage[user] ) : [];
 
     if(films.length === total) return render(films, year);
+    else films = [];
+    
     var pages = getPages(user, total), percent = {
         init: function() {
             contentContainer.innerHTML = '<div class="percent" style="font-size:100px;text-align:center;"><span>0</span>%</div>';
         },
         update: function(percent) {
-            contentContainer.querySelector(".percent span").innerHTML = (percent*100).toFixed(2);
+            contentContainer.querySelector(".percent span").innerHTML = (percent*100).toFixed(1);
         },
         remove: function() {
             contentContainer.innerHTML = "";
