@@ -61,7 +61,7 @@ optionContainer.addEventListener("change", function(e) {
                 };
             var film = {
                 id   : film.id,
-                img  : "http://iphoto.sinaapp.com/{id}.jpg".replace("{id}", film.id),
+                img  : "http://lab.eming.li/dou/{id}.jpg".replace("{id}", film.id),
                 des  : desDOM ? desDOM.textContent : "",
                 date : film.date,
                 year : +film.date.split("-")[0],

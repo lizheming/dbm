@@ -66,7 +66,7 @@ optionContainer.addEventListener("change", function(e) {
                 };
             book = {
                 id   : book.id,
-                img  : "http://iphoto.sinaapp.com/book/{id}.jpg".replace("{id}", book.id),
+                img  : "http://lab.eming.li/dou/book/{id}.jpg".replace("{id}", book.id),
                 des  : desDOM.textContent || "",
                 date : book.date.join("-"),
                 year : +book.date[0],
@@ -169,7 +169,7 @@ function render(books, year) {
                 }\
             </style>',
         bookListItem:'<li class="{{rateName}}">\
-            <a href="http://movie.douban.com/subject/{{id}}" title="{{title}}">\
+            <a href="http://book.douban.com/subject/{{id}}" title="{{title}}">\
                 <img src="{{img}}" crossOrigin="*" alt="{{title}}" width="67px" height="97px" />\
             </a>\
         </li>',
