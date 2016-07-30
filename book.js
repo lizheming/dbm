@@ -126,7 +126,7 @@ function render(books, year) {
             <div id="raw">\
                 <p style="background-color:#d9edf7;color:#3a87ad;padding:8px 35px 8px 14px;margin-bottom:18px;text-shadow: 0 1px 0 rgba(255,255,255,0.5);border:1px solid #bce8f1;-webkit-border-radius:4px;font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;font-size:13px;">\
                     {{word}}\
-                    <a class="jiathis_button_douban" href="http://shuo.douban.com/!service/share?image=&href={{url}}&name={{title}}&text={{word}}" target="_blank" style="float:right;">\
+                    <a class="jiathis_button_douban" href="https://shuo.douban.com/!service/share?image=&href={{url}}&name={{title}}&text={{word}}" target="_blank" style="float:right;">\
                         分享到豆瓣\
                     </a>\
                 </p>\
@@ -169,7 +169,7 @@ function render(books, year) {
                 }\
             </style>',
         bookListItem:'<li class="{{rateName}}">\
-            <a href="http://book.douban.com/subject/{{id}}" title="{{title}}">\
+            <a href="https://book.douban.com/subject/{{id}}" title="{{title}}">\
                 <img src="{{img}}" crossOrigin="*" alt="{{title}}" width="67px" height="97px" />\
             </a>\
         </li>',
@@ -301,7 +301,7 @@ function render(books, year) {
     var mostWatchKey = mwatch(counts.month);
     contentContainer.innerHTML = template.render(template.basicHTML, {
         bookList:bookList, 
-        url:"http://douban.com", 
+        url:"https://douban.com", 
         title:"豆瓣", 
         word: template.render(template.word, {
             year:year, 

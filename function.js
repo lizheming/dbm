@@ -14,7 +14,7 @@ function getHTML(url) {
 }
 function getPages(user, total, type) {
     type = type || "movie";
-    var url = 'http://'+type+'.douban.com/people/'+user+'/collect?sort=time&rating=all&filter=all&mode=grid&start=',
+    var url = 'https://'+type+'.douban.com/people/'+user+'/collect?sort=time&rating=all&filter=all&mode=grid&start=',
         urls = [], start = 0;
 
     do {
@@ -29,7 +29,7 @@ function exportRAW(name, data) {
 
     var export_blob = new Blob([data]);
 
-    var save_link = document.createElementNS("http://www.w3.org/1999/xhtml", "a")
+    var save_link = document.createElementNS("https://www.w3.org/1999/xhtml", "a")
     save_link.href = urlObject.createObjectURL(export_blob);
     save_link.download = name;
     var ev = document.createEvent("MouseEvents");
