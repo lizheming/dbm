@@ -66,7 +66,7 @@ optionContainer.addEventListener("change", function(e) {
                 };
             book = {
                 id   : book.id,
-                img  : "http://lab.eming.li/dou/book/{id}.jpg".replace("{id}", book.id),
+                img  : item.querySelector(".pic img").src,
                 des  : desDOM.textContent || "",
                 date : book.date.join("-"),
                 year : +book.date[0],

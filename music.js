@@ -1,6 +1,6 @@
 var optionContainer = document.querySelector(".article .sort"),
     contentContainer = document.querySelector(".grid-view");
-optionContainer.innerHTML += '<span class="gray-dot">·</span><a href="javascript:void(0);" id="tj">电影统计</a>';
+optionContainer.innerHTML += '<span class="gray-dot">·</span><a href="javascript:void(0);" id="tj">音乐统计</a>';
 optionContainer.addEventListener("click", function(e) {
     if(e.target.id === "tj") {
         if(document.querySelector("#year")) return true;
@@ -25,7 +25,7 @@ optionContainer.addEventListener("change", function(e) {
     if(films.length === total) return render(films, year);
     else films = [];
     
-    var pages = getPages(user, total), percent = {
+    var pages = getPages(user, total, "music"), percent = {
         init: function() {
             contentContainer.innerHTML = '<div class="percent" style="font-size:100px;text-align:center;"><span>0</span>%</div>';
         },
@@ -39,18 +39,18 @@ optionContainer.addEventListener("change", function(e) {
     };
 
     percent.init();
-    getPages(user, total).map(getHTML).reduce(function(seq, html) {
+    getPages(user, total, "music").map(getHTML).reduce(function(seq, html) {
         return seq.then(function() {
             percent.length--;
             percent.update((pages.length - percent.length)/pages.length);
             return html;
-        }).then(getFilms);
+        }).then(getMusics);
     }, Promise.resolve()).then(function() {
         percent.remove();
         render(films, year);
         localStorage.setItem(user, JSON.stringify(films));
     });
-    function getFilms(dom) {
+    function getMusics(dom) {
         return [].forEach.call(dom.querySelectorAll(".item"), function(item) {
             var dateDOM = item.querySelector(".date"),
                 rateDOM = dateDOM.previousElementSibling,
@@ -116,7 +116,7 @@ function render(films, year) {
                 <button class="poster-wall" style="float: right;">生成海报墙</button>\
             </div>\
             <ul id="msh">\
-                {{filmList}}\
+                {{musicList}}\
             </ul>\
             <div id="raw">\
                 <p style="background-color:#d9edf7;color:#3a87ad;padding:8px 35px 8px 14px;margin-bottom:18px;text-shadow: 0 1px 0 rgba(255,255,255,0.5);border:1px solid #bce8f1;-webkit-border-radius:4px;font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;font-size:13px;">\
@@ -132,7 +132,7 @@ function render(films, year) {
                 </p>\
                 <textarea style="height:600px;resize:vertical;width:100%;">\
                     <ul id="msh">\
-                        {{filmList}}\
+                        {{musicList}}\
                     </ul>\
                 </textarea>\
             </div>\
@@ -163,12 +163,12 @@ function render(films, year) {
                     margin: 3px;\
                 }\
             </style>',
-        filmListItem:'<li class="{{rateName}}">\
-            <a href="http://movie.douban.com/subject/{{id}}" title="{{title}}">\
+        musicListItem:'<li class="{{rateName}}">\
+            <a href="http://music.douban.com/subject/{{id}}" title="{{title}}">\
                 <img src="{{img}}" crossOrigin="*" alt="{{title}}" width="67px" height="97px" />\
             </a>\
         </li>',
-        word : "{{year}}年我一共看了{{total}}部影片，平均每月看片{{average}}部。其中{{mostMonth}}看了{{mostWatch}}部影片，是我的年度最佳看片月。十二个月{{watchAverage}}，{{watchLevel}} #豆瓣电影统计工具#",
+        word : "{{year}}年我一共听了{{total}}首音乐，平均每月听歌{{average}}首。其中{{mostMonth}}听了{{mostWatch}}首音乐，是我的年度最佳听歌月。 #豆瓣电影统计工具#",
         render: function(str, obj) {
             return str.replace(/{{(\w+)}}/g, function(_,O) {return obj[O] || O});
         }
@@ -186,7 +186,7 @@ function render(films, year) {
                 }, false);
                 chart.redraw()
             }
-            var basicName = "电影", colors = Highcharts.getOptions().colors;
+            var basicName = "音乐", colors = Highcharts.getOptions().colors;
             var chart = new Highcharts.Chart({
                 chart: {
                     renderTo: 'column',
@@ -194,7 +194,7 @@ function render(films, year) {
                 },
                 title: {text: title},
                 xAxis: {categories: categories},
-                yAxis: {title: {text: '数量（部）'}},
+                yAxis: {title: {text: '数量（首）'}},
                 plotOptions: {
                     column: {
                         cursor: 'pointer',
@@ -221,7 +221,7 @@ function render(films, year) {
                 tooltip: {
                     formatter: function() {
                         var point = this.point,
-                            s = this.x + ': ' + this.y + '部<br/>';
+                            s = this.x + ': ' + this.y + '首<br/>';
                         s += point.drilldown ? '单击查看' + point.category + '详情' : '返回月份总览';
                         return s;
                     }
@@ -282,7 +282,7 @@ function render(films, year) {
     };
 
     films = films.filter(function(film) {return film.year === year});
-    var filmList = films.map(function(film) {
+    var musicList = films.map(function(film) {
         var date = film.date.split("-"),
             filmMonth = +date[1]-1;
             filmDay   = +date[2]-1;
@@ -290,12 +290,12 @@ function render(films, year) {
         counts.month[ filmMonth ] += 1;
         counts.day[ filmMonth ][ filmDay ] += 1;
         film.rateName = RATENAME[film.rate];
-        return template.render(template.filmListItem, film);
+        return template.render(template.musicListItem, film);
     }).join("");
 
     var mostWatchKey = mwatch(counts.month);
     contentContainer.innerHTML = template.render(template.basicHTML, {
-        filmList:filmList, 
+        musicList:musicList, 
         url:"http://douban.com", 
         title:"豆瓣", 
         word: template.render(template.word, {
@@ -310,7 +310,7 @@ function render(films, year) {
     });
 
     var colors = Highcharts.getOptions().colors;
-    charts.renderByYear(year + '年你一共看过' + films.length + '部电影', MONTHES, counts.month.map(function(count, i) {
+    charts.renderByYear(year + '年你一共听过' + films.length + '首音乐', MONTHES, counts.month.map(function(count, i) {
         return {
             y: count,
             color: colors[0],
