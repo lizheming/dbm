@@ -130,11 +130,7 @@ function render(films, year) {
                         引用代码：\
                     </label>\
                 </p>\
-                <textarea style="height:600px;resize:vertical;width:100%;">\
-                    <ul id="msh">\
-                        {{musicList}}\
-                    </ul>\
-                </textarea>\
+                <textarea style="height:600px;resize:vertical;width:100%;"><h3>{{year}}年</h3><ul class="db-items">{{musicList}}</ul></textarea>\
             </div>\
             <style type="text/css">\
                 #command {\
@@ -163,11 +159,7 @@ function render(films, year) {
                     margin: 3px;\
                 }\
             </style>',
-        musicListItem:'<li class="{{rateName}}">\
-            <a href="http://music.douban.com/subject/{{id}}" title="{{title}}">\
-                <img src="{{img}}" crossOrigin="*" alt="{{title}}" width="67px" height="97px" />\
-            </a>\
-        </li>',
+        musicListItem:'<li class="{{rateName}}"><a href="http://music.douban.com/subject/{{id}}" title="{{title}}"><img src="{{img}}" crossOrigin="*" alt="{{title}}" width="67px" height="97px" /></a></li>',
         word : "{{year}}年我一共听了{{total}}首音乐，平均每月听歌{{average}}首。其中{{mostMonth}}听了{{mostWatch}}首音乐，是我的年度最佳听歌月。 #豆瓣电影统计工具#",
         render: function(str, obj) {
             return str.replace(/{{(\w+)}}/g, function(_,O) {return obj[O] || O});
@@ -298,6 +290,7 @@ function render(films, year) {
         musicList:musicList, 
         url:"http://douban.com", 
         title:"豆瓣", 
+        year:year,
         word: template.render(template.word, {
             year:year, 
             total:films.length, 

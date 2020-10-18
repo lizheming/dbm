@@ -135,11 +135,7 @@ function render(books, year) {
                         引用代码：\
                     </label>\
                 </p>\
-                <textarea style="height:600px;resize:vertical;width:100%;">\
-                    <ul id="msh">\
-                        {{bookList}}\
-                    </ul>\
-                </textarea>\
+                <textarea style="height:600px;resize:vertical;width:100%;"><h3>{{year}}年</h3><ul class="db-items">{{bookList}}</ul></textarea>\
             </div>\
             <style type="text/css">\
                 #command {\
@@ -168,11 +164,7 @@ function render(books, year) {
                     margin: 3px;\
                 }\
             </style>',
-        bookListItem:'<li class="{{rateName}}">\
-            <a href="https://book.douban.com/subject/{{id}}" title="{{title}}">\
-                <img src="{{img}}" crossOrigin="*" alt="{{title}}" width="67px" height="97px" />\
-            </a>\
-        </li>',
+        bookListItem:'<li class="{{rateName}}"><a href="https://book.douban.com/subject/{{id}}" title="{{title}}"><img src="{{img}}" crossOrigin="*" alt="{{title}}" width="67px" height="97px" /></a></li>',
         word : "{{year}}年我一共看了{{total}}本书，平均每月看书{{average}}本。其中{{mostMonth}}看了{{mostWatch}}本书，是我的年度最佳看书月。#豆瓣阅读统计工具#",
         render: function(str, obj) {
             return str.replace(/{{(\w+)}}/g, function(_,O) {return obj[O] || O});
@@ -303,6 +295,7 @@ function render(books, year) {
         bookList:bookList, 
         url:"https://douban.com", 
         title:"豆瓣", 
+        year:year,
         word: template.render(template.word, {
             year:year, 
             total:books.length, 
