@@ -61,7 +61,7 @@ optionContainer.addEventListener("change", function(e) {
                 };
             var film = {
                 id   : film.id,
-                img  : "http://lab.eming.li/dou/{id}.jpg".replace("{id}", film.id),
+                img  : item.querySelector(".pic img").src,
                 des  : desDOM ? desDOM.textContent : "",
                 date : film.date,
                 year : +film.date.split("-")[0],
@@ -116,7 +116,7 @@ function render(films, year) {
                 <button class="poster-wall" style="float: right;">生成海报墙</button>\
             </div>\
             <ul id="msh">\
-                {{filmList}}\
+                {{videoList}}\
             </ul>\
             <div id="raw">\
                 <p style="background-color:#d9edf7;color:#3a87ad;padding:8px 35px 8px 14px;margin-bottom:18px;text-shadow: 0 1px 0 rgba(255,255,255,0.5);border:1px solid #bce8f1;-webkit-border-radius:4px;font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;font-size:13px;">\
@@ -130,11 +130,7 @@ function render(films, year) {
                         引用代码：\
                     </label>\
                 </p>\
-                <textarea style="height:600px;resize:vertical;width:100%;">\
-                    <ul id="msh">\
-                        {{filmList}}\
-                    </ul>\
-                </textarea>\
+                <textarea style="height:600px;resize:vertical;width:100%;"><h3>{{year}}年</h3><ul class="db-items">{{videoList}}</ul></textarea>\
             </div>\
             <style type="text/css">\
                 #command {\
@@ -163,11 +159,7 @@ function render(films, year) {
                     margin: 3px;\
                 }\
             </style>',
-        filmListItem:'<li class="{{rateName}}">\
-            <a href="http://movie.douban.com/subject/{{id}}" title="{{title}}">\
-                <img src="{{img}}" crossOrigin="*" alt="{{title}}" width="67px" height="97px" />\
-            </a>\
-        </li>',
+        videoListItem:'<li class="{{rateName}}"><a href="http://movie.douban.com/subject/{{id}}" title="{{title}}"><img src="{{img}}" crossOrigin="*" alt="{{title}}" width="67px" height="97px" /></a></li>',
         word : "{{year}}年我一共看了{{total}}部影片，平均每月看片{{average}}部。其中{{mostMonth}}看了{{mostWatch}}部影片，是我的年度最佳看片月。十二个月{{watchAverage}}，{{watchLevel}} #豆瓣电影统计工具#",
         render: function(str, obj) {
             return str.replace(/{{(\w+)}}/g, function(_,O) {return obj[O] || O});
@@ -282,7 +274,7 @@ function render(films, year) {
     };
 
     films = films.filter(function(film) {return film.year === year});
-    var filmList = films.map(function(film) {
+    var videoList = films.map(function(film) {
         var date = film.date.split("-"),
             filmMonth = +date[1]-1;
             filmDay   = +date[2]-1;
@@ -290,14 +282,15 @@ function render(films, year) {
         counts.month[ filmMonth ] += 1;
         counts.day[ filmMonth ][ filmDay ] += 1;
         film.rateName = RATENAME[film.rate];
-        return template.render(template.filmListItem, film);
+        return template.render(template.videoListItem, film);
     }).join("");
 
     var mostWatchKey = mwatch(counts.month);
     contentContainer.innerHTML = template.render(template.basicHTML, {
-        filmList:filmList, 
+        videoList:videoList, 
         url:"http://douban.com", 
         title:"豆瓣", 
+        year: year,
         word: template.render(template.word, {
             year:year, 
             total:films.length, 

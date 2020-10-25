@@ -11,7 +11,9 @@
                 "https://movie.douban.com/people/*/collect", 
                 "https://movie.douban.com/mine?status=collect",
                 "https://book.douban.com/people/*/collect", 
-                "https://book.douban.com/mine?status=collect"
+                "https://book.douban.com/mine?status=collect",
+                "https://music.douban.com/people/*/collect", 
+                "https://music.douban.com/mine?status=collect"
             ],
             "js"      : [
                 "jquery-2.0.3.min.js",
@@ -34,6 +36,14 @@
                 "https://book.douban.com/mine?status=collect"
             ],
             "js"      : ["book.js"],
+            "run_at"  : "document_end"
+        },
+        {
+            "matches" : [
+                "https://music.douban.com/people/*/collect", 
+                "https://music.douban.com/mine?status=collect"
+            ],
+            "js"      : ["music.js"],
             "run_at"  : "document_end"
         }
     ]
